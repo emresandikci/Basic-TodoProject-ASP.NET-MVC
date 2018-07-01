@@ -1,0 +1,33 @@
+﻿@model ICollection<Friend>
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Arkadaş Listesi <a href='@Url.Action("Search", "Friend")' class="btn btn-success btn-sm"><i class="glyphicon glyphicon-check"></i> Arkadaş Ekle</a></h2>
+<hr />
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Kullanıcı Adı</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.UserName</td>
+                <td>@item.Email</td>
+                <td><a href='@Url.Action("Delete","Friend",new { Id = item.friendId })' class="btn btn-sm btn-danger">Sil <i class="glyphicon glyphicon-trash"></i></a></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="alert alert-danger" role="alert">Henüz arkadaşınız yok!</p>
+}

@@ -1,0 +1,132 @@
+﻿@model Task
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Create", "Task", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {     @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.ApplicationUserId)
+            <h4>Yeni Yapilacak Liste Öğesi</h4>
+            <hr />
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(x => x.Title, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => x.Title, new { placeholder = "Başlık giriniz", @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.Description, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(x => x.Description, new { placeholder = "Açıklama giriniz", @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.startingDate, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => x.startingDate, new { placeholder = "gün/ay/yıl", @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.expirationDate, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => x.expirationDate, new { placeholder = "gün/ay/yıl", @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-default" value="Oluştur" />
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section styles{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+}
+@section scripts{
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function () {
+            //$.datepicker.setDefaults($.datepicker.regional["fr"]);
+
+            $('#startingDate').datepicker({
+                dateFormat: "dd-mm-yy",//tarih formatı yy=yıl mm=ay dd=gün
+
+                autoSize: true,//inputu otomatik boyutlandırır
+
+                changeMonth: true,//ayı elle seçmeyi aktif eder
+
+                changeYear: true,//yılı elee seçime izin verir
+
+                dayNames: ["pazar", "pazartesi", "salı", "çarşamba", "perşembe", "cuma", "cumartesi"],//günlerin adı
+
+                dayNamesMin: ["pa", "pzt", "sa", "çar", "per", "cum", "cmt"],//kısaltmalar
+
+                defaultDate: +5,//takvim açılınca seçili olanı bu günden 10 gün sonra olsun dedik
+
+                /*isRTL: true//takvimi ters çevirir garip bi özellik :D*/
+
+                maxDate: "+2y+1m +2w",//ileri göre bilme zamanını 2 yıl 1 ay 2 hafta yaptık
+
+                minDate: "-1y-1m -2w",//geriyi göre bilme alanını 1 yıl 1 ay 2 hafta yaptık.bunu istediğiniz gibi ayarlaya bilirsiniz
+
+                monthNamesShort: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],//ay seçim alanın düzenledik
+
+                nextText: "ileri",//ileri butonun türkçeleştirdik
+
+                prevText: "geri",//buda geri butonu için
+
+                showAnim: "bounce",//takvim açılım animasyonu alta tüm animasyon isimleri yazdım
+
+            });
+            $('#expirationDate').datepicker({
+                dateFormat: "dd-mm-yy",//tarih formatı yy=yıl mm=ay dd=gün
+
+                autoSize: true,//inputu otomatik boyutlandırır
+
+                changeMonth: true,//ayı elle seçmeyi aktif eder
+
+                changeYear: true,//yılı elee seçime izin verir
+
+                dayNames: ["pazar", "pazartesi", "salı", "çarşamba", "perşembe", "cuma", "cumartesi"],//günlerin adı
+
+                dayNamesMin: ["pa", "pzt", "sa", "çar", "per", "cum", "cmt"],//kısaltmalar
+
+                defaultDate: +5,//takvim açılınca seçili olanı bu günden 10 gün sonra olsun dedik
+
+                /*isRTL: true//takvimi ters çevirir garip bi özellik :D*/
+
+                maxDate: "+2y+1m +2w",//ileri göre bilme zamanını 2 yıl 1 ay 2 hafta yaptık
+
+                minDate: "-1y-1m -2w",//geriyi göre bilme alanını 1 yıl 1 ay 2 hafta yaptık.bunu istediğiniz gibi ayarlaya bilirsiniz
+
+                monthNamesShort: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],//ay seçim alanın düzenledik
+
+                nextText: "ileri",//ileri butonun türkçeleştirdik
+
+                prevText: "geri",//buda geri butonu için
+
+                showAnim: "bounce",//takvim açılım animasyonu alta tüm animasyon isimleri yazdım
+
+                /*fold-blind-bounce-clip-drop-explode-fade-highlight-puff-pulsate-scale-shake-slide-size-transfer*/
+            });
+
+            $('#expirationDate').on('change', function () {
+                var selectedDate = $('#expirationDate').val();
+                var startDate = $('#startingDate').val();
+                if (startDate > selectedDate) {
+                    alert('Başlangıç tarihi bitiş tarihinden büyük olamaz!');
+                    $('#startingDate').val('');
+                    $('#expirationDate').val('');
+                }
+            });
+        });
+    </script>
+}
+

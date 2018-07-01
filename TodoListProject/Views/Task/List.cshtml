@@ -1,0 +1,60 @@
+﻿@model ICollection<Task>
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Görev Listesi | <a href='@Url.Action("Create","Task")' class="btn btn-success">Yeni görev öğesi oluştur <i class="glyphicon glyphicon-plus-sign"></i></a></h2>
+
+<div class="row">
+    <div class="col-sm-9">
+        @if (Model.Any())
+        {
+            <div class="list-group">
+                @foreach (var item in Model)
+                {
+                    <div class="list-group-item">
+                        @if (item.isCompleted)
+                        {
+                            <input type="checkbox" class="checkbox" checked="checked" />
+                            <h4 class="list-group-item-heading"><del>@item.Todo.Title > @item.Title - <time>@item.CreatedDate</time></del></h4>
+                            <p class="list-group-item-text"><del>@item.Description</del></p>
+                        }
+                        else
+                        {
+                            <a href='@Url.Action("CompleteToTask", "Task", new { Id = item.Id })' class="btn btn-success btn-sm"><i class="glyphicon glyphicon-check"></i> Görevi Tamamla</a>
+                            <a href='@Url.Action("Update", "Task", new { Id = item.Id })' class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-edit"></i> Düzenle</a>
+                            <h4 class="list-group-item-heading">@item.Todo.Title > @item.Title - <time>@item.CreatedDate</time></h4>
+                            <p class="list-group-item-text">@item.Description</p>
+                        }
+
+
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="alert alert-danger" role="alert">Henüz Görev Oluşturulmadı!</p>
+        }
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            $('.list-group-item').hover(function () {
+                if (!$(this).hasClass('active')) {
+                    $(this).addClass('active');
+                }
+                else {
+                    $(this).removeClass('active');
+                }
+            });
+
+
+        });
+    </script>
+}
+

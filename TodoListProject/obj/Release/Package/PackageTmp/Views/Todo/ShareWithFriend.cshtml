@@ -1,0 +1,37 @@
+﻿@model SharingTodoWithFriend
+@using Microsoft.AspNet.Identity;
+@{
+
+    ViewBag.Title = "ShareWithFriend";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentUserId = User.Identity.GetUserId();
+    Model.ApplicationUserId = User.Identity.GetUserId();
+    //var FriendList =
+    ViewBag.FriendList = TodoListProject.Tools.TodoSingleton.getInstance().Friends.Where(x => x.ApplicationUserId == currentUserId).ToList();
+}
+<div class="container">
+    <div class="col-md-12">
+        @using (Html.BeginForm("ShareWithFriend", "Todo", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x=>x.ApplicationUserId)
+            @Html.HiddenFor(x=>x.TodoId)
+            <h4>Arkadaşınla Payaş</h4>
+            <hr />
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(x => x.UserId, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(x => x.UserId, new SelectList(ViewBag.FriendList, "friendId", "Email"),
+                     new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-default" value="Oluştur" />
+                </div>
+            </div>
+
+        }
+    </div>
+</div>

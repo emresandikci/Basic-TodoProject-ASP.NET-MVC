@@ -1,0 +1,54 @@
+﻿@model ICollection<ApplicationUser>
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentUserId = User.Identity.GetUserId();
+    var currentFriendList = TodoListProject.Tools.TodoSingleton.getInstance().Friends.Where(x => x.isDeleted == false && x.ApplicationUserId == currentUserId).ToList();
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Html.BeginForm("Search", "Friend", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input id="keyword" type="text" class="form-control" name="keyword" placeholder="Aranacak kullanıcı Email giriniz...">
+                </div>
+
+            }
+            @if (Model != null)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Kullanıcı Adı</th>
+                            <th>Email</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.UserName</td>
+                                <td>@item.Email</td>
+                                @if (currentFriendList.Where(x => x.friendId == item.Id).Any())
+                                {
+                                    <td><a href='@Url.Action("Delete","Friend",new { Id = item.Id })' class="btn btn-sm btn-danger">Sil <i class="glyphicon glyphicon-trash"></i></a></td>
+                                }
+                                else
+                                {
+                                    <td><a href='@Url.Action("Add","Friend",new { Id = item.Id })' class="btn btn-sm btn-success">Ekle <i class="glyphicon glyphicon-plus"></i></a></td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

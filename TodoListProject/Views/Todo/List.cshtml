@@ -1,0 +1,115 @@
+﻿@model ICollection<Todo>
+@using Microsoft.AspNet.Identity;
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentUserId = User.Identity.GetUserId();
+    var sharedWithMe = TodoListProject.Tools.TodoSingleton.getInstance().SharingTodoWithFriends.Where(x => x.UserId == currentUserId).ToList();
+}
+
+<div class="row">
+    <h2>Yapılacaklar Listesi | <a href='@Url.Action("Create","Todo")' class="btn btn-success">Yeni yapılacak liste öğesi oluştur <i class="glyphicon glyphicon-plus-sign"></i></a></h2>
+
+    <div class="col-sm-9">
+        @if (Model.Any())
+            {
+        <div class="list-group">
+            @foreach (var item in Model)
+                {
+                <div class="list-group-item">
+                    <a href='@Url.Action("Create", "Task", new { todoId= item.Id })' class="btn btn-success btn-sm"><i class="glyphicon glyphicon-plus"></i> Görevi Ekle</a>
+                    <a href='@Url.Action("TodoTasks", "Todo", new { Id = item.Id })' class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-list"></i> Görev Listesi</a>
+                    <a href='@Url.Action("ShareWithFriend", "Todo", new { Id = item.Id })' class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-list"></i> Arkadaşınla Paylaş</a>
+                    <a href='@Url.Action("Update", "Todo", new { Id = item.Id })' class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-edit"></i> Düzenle</a>
+                    <h4 class="list-group-item-heading">
+                        @item.Title |
+
+                        @if (item.Tasks != null)
+                            {
+                            <span class="badge badge-success">@item.Tasks.Where(x=>x.isCompleted==false).ToList().Count Görev var</span>
+                            }
+                            else
+                            {
+                            <span class="badge badge-success">0 Görev var</span>
+                            }
+                        |
+                        @if (item.SharingTodoWithFriends != null)
+                            {
+                            <span class="glyphicon glyphicon-user">@item.SharingTodoWithFriends.Count</span>
+                            }
+                            else
+                            {
+                            <span class="glyphicon glyphicon-user">0</span>
+                            }
+
+                        |
+
+                        <time>@item.CreatedDate</time>
+                    </h4>
+                    <p class="list-group-item-text">@item.Description</p>
+                </div>
+                }
+        </div>
+        }
+        else
+        {
+        <p class="alert alert-danger" role="alert">Henüz Yapılacak listesi Oluşturulmadı</p>
+        }
+    </div>
+    <h4>Benimle Paylaşılan</h4>
+    <div class="col-sm-3">
+
+        @if (sharedWithMe.Any())
+            {
+            <div class="list-group">
+                @foreach (var item in sharedWithMe)
+                {
+                    <div class="list-group-item">
+                        <a href='@Url.Action("Create", "Task", new { todoId = item.TodoId })' class="btn btn-success btn-sm"><i class="glyphicon glyphicon-plus"></i> Görevi Ekle</a>
+                        <a href='@Url.Action("TodoTasks", "Todo", new { Id = item.TodoId })' class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-list"></i> Görev Listesi</a>
+                        <a href='@Url.Action("SharedWithMeUpdate", "Todo", new { Id = item.TodoId })' class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-edit"></i> Düzenle</a>
+                        <h4 class="list-group-item-heading">
+                            @item.Todo.Title |
+
+                            @if (item.Todo.Tasks != null)
+                            {
+                                <span class="badge badge-success">@item.Todo.Tasks.Where(x => x.isCompleted == false).ToList().Count Görev var</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-success">0 Görev var</span>
+                            }
+                            |
+
+                            <time>@item.CreatedDate</time>
+                        </h4>
+                        <p class="list-group-item-text">@item.Todo.Description</p>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="alert alert-danger" role="alert">Henüz birşey paylaşılmadı!</p>
+        }
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            $('.list-group-item').hover(function () {
+                if (!$(this).hasClass('active')) {
+                    $(this).addClass('active');
+                }
+                else {
+                    $(this).removeClass('active');
+                }
+            });
+
+
+        });
+    </script>
+}
+
